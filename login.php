@@ -1,5 +1,6 @@
 <?php
 // Database connection
+
 $servername = "192.168.84.3";
 $username = "junghwa";
 $password = "dua6531";
