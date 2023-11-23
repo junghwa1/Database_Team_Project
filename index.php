@@ -5,34 +5,29 @@ session_start();
 if (isset($_SESSION['username'])) {
     $loggedIn = true;
     $username = $_SESSION['username'];
+
+    // Database connection
+    $servername = "192.168.84.3";
+    $port = 4567;
+    $username = "junghwa";
+    $password = "dua6531";
+    $database = "music_management_system";
+
+    $conn = new mysqli($servername, $username, $password, $database, $port);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Query to get user's playlist information
+    $playlistSql = "SELECT playlistId, playlistTitle FROM playlist WHERE username = '$username'";
+    $playlistResult = $conn->query($playlistSql);
+
+    // Close the database connection
+    $conn->close();
 } else {
     $loggedIn = false;
 }
-
-// 로그아웃 처리
-if (isset($_POST['logout'])) {
-    session_unset();
-    session_destroy();
-    header("Location: index.php");
-    exit();
-}
-
-// Database connection
-$servername = "192.168.84.3";
-$port = 4567;
-$username = "junghwa";
-$password = "dua6531";
-$database = "music_management_system";
-
-$conn = new mysqli($servername, $username, $password, $database, $port);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Query to get album information
-$sql = "SELECT albumNumber, albumTitle, artist, releaseDate FROM album";
-$result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -45,6 +40,12 @@ $result = $conn->query($sql);
         body {
             text-align: center;
             margin-top: 50px;
+            display: flex;
+            justify-content: space-between; /* 왼쪽과 오른쪽을 각각의 끝으로 정렬 */
+        }
+
+        .left, .right {
+            width: 48%; /* 수정: 각 영역의 너비를 조정 */
         }
 
         .button-container {
@@ -78,14 +79,8 @@ $result = $conn->query($sql);
             margin-top: 20px;
         }
 
-        .left {
-            float: left;
-            width: 50%;
-            margin: 0 auto; /* 가운데 정렬을 위한 스타일 추가 */
-        }
-
         table {
-            margin: 0 auto; /* 수정: 테이블을 가운데 정렬 */
+            width: 100%;
             border-collapse: collapse;
         }
 
@@ -125,46 +120,56 @@ $result = $conn->query($sql);
         <h1>music manager</h1>
     </div>
 
-    <div class="button-container">
+    <div class="left">
+        <?php
+        // Check if there are albums
+        if ($result->num_rows > 0) {
+            echo "<h2>Albums</h2>";
+            echo "<table>";
+            echo "<tr><th>Album Number</th><th>Album Title</th><th>Artist</th><th>Release Date</th></tr>";
+
+            // Output data of each row
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr class='album-row' data-album-number='" . $row["albumNumber"] . "'>";
+                echo "<td>" . $row["albumNumber"] . "</td>";
+                echo "<td>" . $row["albumTitle"] . "</td>";
+                echo "<td>" . $row["artist"] . "</td>";
+                echo "<td>" . $row["releaseDate"] . "</td>";
+                echo "</tr>";
+            }
+
+            echo "</table>";
+        } else {
+            echo "<p>No albums found.</p>";
+        }
+        ?>
+        <div class="song-list-container">
+            <!-- 노래 목록이 여기에 동적으로 로드됩니다. -->
+        </div>
+    </div>
+
+    <div class="right">
         <?php if ($loggedIn): ?>
-            <p>User ID: <?php echo $username; ?></p>
-            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                <input type="submit" name="logout" value="Logout">
-            </form>
-        <?php else: ?>
-            <a href="login.php">Login</a>
-            <a href="signup.php">Sign Up</a>
+            <h2>User Playlists</h2>
+            <?php
+            if ($playlistResult->num_rows > 0) {
+                echo "<table>";
+                echo "<tr><th>Playlist ID</th><th>Playlist Title</th></tr>";
+
+                while ($playlistRow = $playlistResult->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . $playlistRow["playlistId"] . "</td>";
+                    echo "<td>" . $playlistRow["playlistTitle"] . "</td>";
+                    echo "</tr>";
+                }
+
+                echo "</table>";
+            } else {
+                echo "<p>No playlists found for the user.</p>";
+            }
+            ?>
         <?php endif; ?>
     </div>
-<div class="left">
-    <?php
-    // Check if there are albums
-    if ($result->num_rows > 0) {
-        echo "<h2>Albums</h2>";
-        echo "<table>";
-        echo "<tr><th>Album Number</th><th>Album Title</th><th>Artist</th><th>Release Date</th></tr>";
 
-        // Output data of each row
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr class='album-row' data-album-number='" . $row["albumNumber"] . "'>";
-            echo "<td>" . $row["albumNumber"] . "</td>";
-            echo "<td>" . $row["albumTitle"] . "</td>";
-            echo "<td>" . $row["artist"] . "</td>";
-            echo "<td>" . $row["releaseDate"] . "</td>";
-            echo "</tr>";
-        }
-
-        echo "</table>";
-    } else {
-        echo "<p>No albums found.</p>";
-    }
-
-    $conn->close();
-    ?>
-
-    <div class="song-list-container">
-        <!-- 노래 목록이 여기에 동적으로 로드됩니다. -->
-    </div>
-</div>
 </body>
 </html>
