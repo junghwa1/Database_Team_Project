@@ -1,5 +1,5 @@
 <?php
-// get_songs.php
+session_start(); // 세션 시작
 
 if (isset($_GET['albumNumber'])) {
     $albumNumber = $_GET['albumNumber'];
@@ -24,8 +24,8 @@ if (isset($_GET['albumNumber'])) {
     if ($result->num_rows > 0) {
         echo "<h2>Songs</h2>";
         echo "<table border='1'>";
-        echo "<tr><th>Song ID</th><th>Track Number</th><th>Title</th><th>songLength</th><th>Heart</th></tr>";
-        
+        echo "<tr><th>Song ID</th><th>Track Number</th><th>Title</th><th>songLength</th><th>Heart</th><th>Action</th></tr>";
+
         while ($row = $result->fetch_assoc()) {
             echo "<tr>";
             echo "<td>" . $row["songId"] . "</td>";
@@ -33,6 +33,10 @@ if (isset($_GET['albumNumber'])) {
             echo "<td>" . $row["musicTitle"] . "</td>";
             echo "<td>" . $row["songLength"] . "</td>";
             echo "<td>" . $row["heart"] . "</td>";
+            echo "<td>";
+            // 플레이리스트에 추가하는 버튼
+            echo "<button class='add-to-playlist' data-song-id='" . $row["songId"] . "'>Add to Playlist</button>";
+            echo "</td>";
             echo "</tr>";
         }
 
@@ -46,3 +50,4 @@ if (isset($_GET['albumNumber'])) {
     echo "Invalid request.";
 }
 ?>
+

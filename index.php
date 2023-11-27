@@ -139,26 +139,104 @@ if ($loggedIn) {
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            // 앨범 버튼을 클릭하면 노래 목록을 동적으로 로드
-            $('.album-button').click(function () {
-                var albumNumber = $(this).data('album-number');
+    
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // 앨범 버튼을 클릭하면 노래 목록을 동적으로 로드
+        $('.album-button').click(function () {
+            var albumNumber = $(this).data('album-number');
 
-                $.ajax({
-                    url: 'get_songs.php',
-                    type: 'GET',
-                    data: { albumNumber: albumNumber },
-                    success: function (data) {
-                        $('.song-list-container').html(data);
-                    },
-                    error: function () {
-                        alert('Failed to load songs.');
-                    }
-                });
+            $.ajax({
+                url: 'get_songs.php',
+                type: 'GET',
+                data: { albumNumber: albumNumber },
+                success: function (data) {
+                    $('.song-list-container').html(data);
+
+                    // Add to Playlist 버튼에 대한 클릭 이벤트 리스너 추가
+                    $('.add-to-playlist').click(function () {
+                        var songIdToAdd = $(this).data('song-id');
+
+                        // AJAX를 사용하여 노래를 플레이리스트에 추가
+                        $.ajax({
+                            url: 'add_to_playlist.php', // 실제 파일 이름에 맞게 수정
+                            type: 'POST',
+                            data: { add_to_playlist: songIdToAdd },
+                            success: function (response) {
+                                alert(response); // 서버에서 반환한 메시지를 알림으로 표시
+                            },
+                            error: function () {
+                                alert('Failed to add song to playlist.');
+                            }
+                        });
+                    });
+                },
+                error: function () {
+                    alert('Failed to load songs.');
+                }
             });
         });
-    </script>
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        // 페이지 로드시 플레이리스트 초기 로딩
+        loadPlaylist();
+
+        // 앨범 버튼을 클릭하면 노래 목록을 동적으로 로드
+        $('.album-button').click(function () {
+            var albumNumber = $(this).data('album-number');
+
+            $.ajax({
+                url: 'get_songs.php',
+                type: 'GET',
+                data: { albumNumber: albumNumber },
+                success: function (data) {
+                    $('.song-list-container').html(data);
+
+                    // Add to Playlist 버튼에 대한 클릭 이벤트 리스너 추가
+                    $('.add-to-playlist').click(function () {
+                        var songIdToAdd = $(this).data('song-id');
+
+                        // AJAX를 사용하여 노래를 플레이리스트에 추가
+                        $.ajax({
+                            url: 'add_to_playlist.php',
+                            type: 'POST',
+                            data: { add_to_playlist: songIdToAdd },
+                            success: function (response) {
+                                alert(response); // 서버에서 반환한 메시지를 알림으로 표시
+                                loadPlaylist(); // 플레이리스트를 다시 로드
+                            },
+                            error: function () {
+                                alert('Failed to add song to playlist.');
+                            }
+                        });
+                    });
+                },
+                error: function () {
+                    alert('Failed to load songs.');
+                }
+            });
+        });
+
+        // 플레이리스트 로드 함수
+        function loadPlaylist() {
+            $.ajax({
+                url: 'load_playlist.php',
+                type: 'GET',
+                success: function (playlistData) {
+                    // 플레이리스트 테이블을 동적으로 업데이트
+                    $('#playlist-table-container').html(playlistData);
+                },
+                error: function () {
+                    alert('Failed to load playlist.');
+                }
+            });
+        }
+    });
+</script>
 </head>
 <body>
     <div class="top">
@@ -192,7 +270,7 @@ if ($loggedIn) {
                 echo "<td>" . $row_album["albumTitle"] . "</td>";
                 echo "<td>" . $row_album["artist"] . "</td>";
                 echo "<td>" . $row_album["releaseDate"] . "</td>";
-                echo "<td><button class='album-button' data-album-number='" . $row_album["albumNumber"] . "'>View Songs</button></td>";
+                echo "<td><button class='album-button' data-album-number='" . $row_album["albumNumber"] . "'>View details</button></td>";
                 echo "</tr>";
             }
 
@@ -208,31 +286,14 @@ if ($loggedIn) {
     </div>
 
     <div class="right">
-        <?php if ($loggedIn): ?>
-            <div class="playlist-container">
-                <h2>Your Playlist</h2>
-                <?php if ($result_playlist->num_rows > 0): ?>
-                    <table>
-                        <tr>
-                            <th>Music Title</th>
-                            <th>Artist</th>
-                            <th>Song Length</th>
-                            <th>Heart Count</th>
-                        </tr>
-                        <?php while ($row_playlist = $result_playlist->fetch_assoc()): ?>
-                            <tr>
-                                <td><?php echo $row_playlist["musicTitle"]; ?></td>
-                                <td><?php echo $row_playlist["artist"]; ?></td>
-                                <td><?php echo $row_playlist["songLength"]; ?></td>
-                                <td><?php echo $row_playlist["heart"]; ?></td>
-                            </tr>
-                        <?php endwhile; ?>
-                    </table>
-                <?php else: ?>
-                    <p>No songs in your playlist.</p>
-                <?php endif; ?>
+    <?php if ($loggedIn): ?>
+        <div class="playlist-container">
+            <h2>Your Playlist</h2>
+            <div id="playlist-table-container">
+                <!-- 플레이리스트 테이블이 여기에 동적으로 로드됩니다. -->
             </div>
-        <?php endif; ?>
-    </div>
+        </div>
+    <?php endif; ?>
+</div>
 </body>
 </html>
