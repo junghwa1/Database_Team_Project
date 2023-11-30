@@ -1,4 +1,5 @@
 <?php
+//add_to_playlist.php
 session_start();
 
 if (isset($_POST['add_to_playlist']) && isset($_SESSION['user_id'])) {
@@ -33,7 +34,6 @@ if (isset($_POST['add_to_playlist']) && isset($_SESSION['user_id'])) {
             // 추가가 성공한 경우
             echo "Song added to playlist successfully!";
 
-            
         } else {
             // 추가에 실패한 경우
             echo "Error adding song to playlist: " . $conn->error;

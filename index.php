@@ -248,6 +248,7 @@ if ($loggedIn) {
             <p>User ID: <?php echo $username; ?></p>
             <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                 <input type="submit" name="logout" value="Logout">
+                <a href="search.php">search</a>
             </form>
         <?php else: ?>
             <a href="login.php">Login</a>

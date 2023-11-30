@@ -1,4 +1,5 @@
 <?php
+//get_song
 session_start(); // 세션 시작
 
 if (isset($_GET['albumNumber'])) {
