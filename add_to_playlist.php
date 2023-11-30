@@ -8,7 +8,7 @@ if (isset($_POST['add_to_playlist']) && isset($_SESSION['user_id'])) {
 
     // Database connection
     $servername = "192.168.84.3";
-    $port = 4567;
+    $port = 45678;
     $username = "junghwa";
     $password = "dua6531";
     $database = "music_management_system";
