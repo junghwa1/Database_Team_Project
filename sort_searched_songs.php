@@ -34,9 +34,6 @@ if (isset($_GET['sortType'])) {
         case 'artist':
             $sql_sort .= "a.artist";
             break;
-        case 'heart':
-            $sql_sort .= "s.heart";
-            break;
         default:
             // 기본적으로 Song ID로 정렬
             $sql_sort .= "s.songId";

@@ -196,11 +196,10 @@ $result_songs = $conn->query($sql_songs);
     <h2>노래</h2>
     <div style="margin: 10px;">
         <strong>정렬 기준:</strong>
-        <a class="sort-button" href="?search=<?php echo urlencode($searchKeyword); ?>&sort=songId">노래 ID</a>
-        <a class="sort-button" href="?search=<?php echo urlencode($searchKeyword); ?>&sort=musicTitle">음악 제목</a>
-        <a class="sort-button" href="?search=<?php echo urlencode($searchKeyword); ?>&sort=artist">아티스트</a>
-        <a class="sort-button" href="?search=<?php echo urlencode($searchKeyword); ?>&sort=songLength">노래 길이</a>
-        <a class="sort-button" href="?search=<?php echo urlencode($searchKeyword); ?>&sort=heart">하트 수</a>
+        <a class="sort-button" href="?search=<?php echo urlencode($searchKeyword); ?>&sort=songId">Song ID</a>
+        <a class="sort-button" href="?search=<?php echo urlencode($searchKeyword); ?>&sort=musicTitle">Music Title</a>
+        <a class="sort-button" href="?search=<?php echo urlencode($searchKeyword); ?>&sort=artist">Artist</a>
+        <a class="sort-button" href="?search=<?php echo urlencode($searchKeyword); ?>&sort=songLength">Song Length</a>
 </div>
 
 
@@ -208,7 +207,7 @@ $result_songs = $conn->query($sql_songs);
     // 노래가 있는지 확인
     if ($result_songs->num_rows > 0) {
         echo "<table>";
-        echo "<tr><th>노래 ID</th><th>음악 제목</th><th>아티스트</th><th>노래 길이</th><th>하트 수</th><th>동작</th></tr>";
+        echo "<tr><th>Song ID</th><th>Music Title</th><th>Artist</th><th>Song Length</th><th>Heart Count</th><th>Action</th></tr>";
         
 
         // 각 행의 데이터 출력
@@ -220,7 +219,7 @@ $result_songs = $conn->query($sql_songs);
             echo "<td>" . $row_song["songLength"] . "</td>";
             echo "<td>" . $row_song["heart"] . "</td>";
             echo "<td>";
-            echo "<button class='add-to-playlist' data-song-id='" . $row_song["songId"] . "'>플레이리스트에 추가</button>";
+            echo "<button class='add-to-playlist' data-song-id='" . $row_song["songId"] . "'>Add to Playlist</button>";
             echo "</td>";
             echo "</tr>";
         }
