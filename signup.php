@@ -17,6 +17,7 @@ $message = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $signupUsername = $_POST["username"];
     $signupPassword = $_POST["password"];
+    $signupNickname = $_POST["nickname"];
 
     // Check if username already exists
     $checkUsernameQuery = "SELECT id FROM users WHERE username='$signupUsername'";
@@ -27,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         // Insert new user
         $hashedPassword = password_hash($signupPassword, PASSWORD_DEFAULT);
-        $insertUserQuery = "INSERT INTO users (username, password) VALUES ('$signupUsername', '$hashedPassword')";
+        $insertUserQuery = "INSERT INTO users (username, password, nickname) VALUES ('$signupUsername', '$hashedPassword', '$signupNickname')";
         if ($conn->query($insertUserQuery) === TRUE) {
             $message = "Sign up successful!";
         } else {
@@ -99,6 +100,9 @@ $conn->close();
         <br>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
+        <br>
+        <label for="nickname">Nickname:</label>
+        <input type="text" id="nickname" name="nickname" required>
         <br>
         <div class="button-container">
             <input type="submit" value="Sign Up">

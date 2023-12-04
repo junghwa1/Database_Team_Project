@@ -193,9 +193,9 @@ $result_songs = $conn->query($sql_songs);
 
 
 <div class="searched-results">
-    <h2>노래</h2>
+    <h2>Song</h2>
     <div style="margin: 10px;">
-        <strong>정렬 기준:</strong>
+        <strong>sort:</strong>
         <a class="sort-button" href="?search=<?php echo urlencode($searchKeyword); ?>&sort=songId">Song ID</a>
         <a class="sort-button" href="?search=<?php echo urlencode($searchKeyword); ?>&sort=musicTitle">Music Title</a>
         <a class="sort-button" href="?search=<?php echo urlencode($searchKeyword); ?>&sort=artist">Artist</a>

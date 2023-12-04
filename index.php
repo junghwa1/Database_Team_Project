@@ -5,6 +5,7 @@ session_start();
 if (isset($_SESSION['username'])) {
     $loggedIn = true;
     $username = $_SESSION['username'];
+    $nickname = $_SESSION['nickname'];
 } else {
     $loggedIn = false;
 }
@@ -72,7 +73,14 @@ if ($loggedIn) {
         .button-container {
             display: flex;
             justify-content: center;
+            align-items: center;
             margin-top: 20px;
+        }
+
+        .info{
+            display: flex;
+            flex-direction: column;
+            margin-right:20px;
         }
 
         .button-container a, input[type="submit"] {
@@ -245,9 +253,13 @@ if ($loggedIn) {
 
     <div class="button-container">
         <?php if ($loggedIn): ?>
+            <div class="info">
             <p>User ID: <?php echo $username; ?></p>
+            <p>Nick Name: <?php echo $nickname; ?></p>
+        </div>
             <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                 <input type="submit" name="logout" value="Logout">
+                <a href="change_nickname.php">Change Nickname</a>
                 <a href="search.php">search</a>
             </form>
         <?php else: ?>
