@@ -17,7 +17,7 @@ if ($conn->connect_error) {
 if (isset($_GET['sortType'])) {
     $sortType = $_GET['sortType'];
 
-    // Query to sort searched songs based on the selected type
+    // 선택한 유형에 따라 검색된 노래를 정렬하기 위한 쿼리
     $sql_sort = "SELECT s.songId, s.albumNumber, s.trackNumber, s.musicTitle, a.artist, s.songLength, s.heart
                 FROM song s
                 JOIN album a ON s.albumNumber = a.albumNumber
@@ -40,7 +40,7 @@ if (isset($_GET['sortType'])) {
             break;
     }
 
-    // Use prepared statements to prevent SQL injection
+    
     $stmt = $conn->prepare($sql_sort);
     $searchTerm = '%' . $_GET['searchTerm'] . '%';
     $stmt->bind_param("ss", $searchTerm, $searchTerm);

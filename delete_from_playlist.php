@@ -1,5 +1,4 @@
 <?php
-//delete_from_playlist
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_from_playlist'])) {

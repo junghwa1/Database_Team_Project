@@ -5,6 +5,7 @@ session_start();
 if (isset($_SESSION['username'])) {
     $loggedIn = true;
     $username = $_SESSION['username'];
+    $nickname = $_SESSION['nickname'];
 } else {
     $loggedIn = false;
 }
@@ -60,108 +61,8 @@ $result_songs = $conn->query($sql_songs);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Songs</title>
-    <style>
-        body {
-            text-align: center;
-            margin-top: 50px;
-        }
+    <link rel="stylesheet" href="styles.css">
 
-        .button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .button-container a, input[type="submit"] {
-            margin: 0 10px;
-            padding: 10px 20px;
-            text-decoration: none;
-            font-size: 16px;
-            border: 1px solid #333;
-            border-radius: 5px;
-            color: #333;
-            background-color: #fff;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-            display: inline-block;
-        }
-
-        .button-container a:hover, input[type="submit"]:hover {
-            background-color: #333;
-            color: #fff;
-        }
-
-        .search-container {
-            margin-top: 20px;
-        }
-
-        .search-container label {
-            margin-right: 10px;
-        }
-
-        .message {
-            color: #ff0000;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        .left {
-            float: left;
-            width: 50%;
-            margin: 0 auto; /* 가운데 정렬을 위한 스타일 추가 */
-        }
-
-        .searched-results {
-            margin-top: 20px;
-        }
-
-        table {
-            margin: 0 auto;
-            border-collapse: collapse;
-        }
-
-        table, th, td {
-            border: 1px solid #333;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-        .right {
-            float: right;
-            width: 50%;
-            margin: 0 auto;
-        }
-
-        .playlist-container {
-            margin-top: 20px;
-        }
-
-        .playlist-container h2 {
-            margin-bottom: 10px;
-        }
-
-        .playlist-item {
-            margin-bottom: 5px;
-        }
-
-        .sort-button {
-        display: inline-block;
-        margin-right: 10px;
-        padding: 5px 10px;
-        text-decoration: none;
-        color: #333;
-        border: 1px solid #333;
-        border-radius: 5px;
-        transition: background-color 0.3s, color 0.3s;
-    }
-
-    .sort-button:hover {
-        background-color: #333;
-        color: #fff;
-    }
-    </style>
 </head>
 <body>
     <div class="top">
@@ -170,7 +71,10 @@ $result_songs = $conn->query($sql_songs);
 
     <div class="button-container">
     <?php if ($loggedIn): ?>
-        <p>User ID: <?php echo $username; ?></p>
+        <div class="info">
+            <p>User ID: <?php echo $username; ?></p>
+            <p>Nick Name: <?php echo $nickname; ?></p>
+        </div>
         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
             <input type="submit" name="logout" value="Logout">
             <a href="index.php">Home</a>
@@ -181,7 +85,7 @@ $result_songs = $conn->query($sql_songs);
         <a href="signup.php">Sign Up</a>
     <?php endif; ?>
     </div>
-
+<div class="middle">
     <div class="left">
             <div class="search-container">
     <form id="search-form" method="get" action="">
@@ -237,12 +141,12 @@ $result_songs = $conn->query($sql_songs);
             <div class="playlist-container">
                 <h2>Your Playlist</h2>
                 <div id="playlist-table-container">
-                    <!-- 플레이리스트 테이블이 여기에 동적으로 로드됩니다. -->
+                    <!-- 플레이리스트 테이블이 여기에 동적으로 로드됨 -->
                 </div>
             </div>
         <?php endif; ?>
     </div>
-
+        </div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
         $(document).ready(function () {

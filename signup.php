@@ -12,21 +12,21 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Sign Up Logic
+// 회원가입 로직
 $message = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $signupUsername = $_POST["username"];
     $signupPassword = $_POST["password"];
     $signupNickname = $_POST["nickname"];
 
-    // Check if username already exists
+    // username 중복 확인
     $checkUsernameQuery = "SELECT id FROM users WHERE username='$signupUsername'";
     $checkUsernameResult = $conn->query($checkUsernameQuery);
 
     if ($checkUsernameResult->num_rows > 0) {
         $message = "Username already exists. Please choose another.";
     } else {
-        // Insert new user
+        //새로운 user 추가
         $hashedPassword = password_hash($signupPassword, PASSWORD_DEFAULT);
         $insertUserQuery = "INSERT INTO users (username, password, nickname) VALUES ('$signupUsername', '$hashedPassword', '$signupNickname')";
         if ($conn->query($insertUserQuery) === TRUE) {

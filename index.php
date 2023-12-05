@@ -31,13 +31,13 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Query to get album information
+// 앨범 정보를 가져오기 위한 쿼리
 $sql_album = "SELECT albumNumber, albumTitle, artist, releaseDate FROM album";
 $result_album = $conn->query($sql_album);
 
-// Query to get user's playlist
+// 사용자의 플레이리스트를 가져오기 위한 쿼리
 if ($loggedIn) {
-    $userId = $_SESSION['user_id'];  // Assuming you store the user_id in the session
+    $userId = $_SESSION['user_id'];  // 세션에 사용자 ID를 저장함
     $sql_playlist = "SELECT
                         up.id AS playlistItemId,
                         up.userId,
@@ -64,129 +64,12 @@ if ($loggedIn) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <style>
-        body {
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        .info{
-            display: flex;
-            flex-direction: column;
-            margin-right:20px;
-        }
-
-        .button-container a, input[type="submit"] {
-            margin: 0 10px;
-            padding: 10px 20px;
-            text-decoration: none;
-            font-size: 16px;
-            border: 1px solid #333;
-            border-radius: 5px;
-            color: #333;
-            background-color: #fff;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-            display: inline-block;
-        }
-
-        .button-container a:hover, input[type="submit"]:hover {
-            background-color: #333;
-            color: #fff;
-        }
-
-        .message {
-            color: #ff0000;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        .left {
-            float: left;
-            width: 50%;
-            margin: 0 auto; /* 가운데 정렬을 위한 스타일 추가 */
-        }
-
-        table {
-            margin: 0 auto; /* 수정: 테이블을 가운데 정렬 */
-            border-collapse: collapse;
-        }
-
-        table, th, td {
-            border: 1px solid #333;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        .right {
-            float: right;
-            width: 50%;
-            margin: 0 auto;
-        }
-
-        .playlist-container {
-            margin-top: 20px;
-        }
-
-        .playlist-container h2 {
-            margin-bottom: 10px;
-        }
-
-        .playlist-item {
-            margin-bottom: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+    
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    $(document).ready(function () {
-        // 앨범 버튼을 클릭하면 노래 목록을 동적으로 로드
-        $('.album-button').click(function () {
-            var albumNumber = $(this).data('album-number');
 
-            $.ajax({
-                url: 'get_songs.php',
-                type: 'GET',
-                data: { albumNumber: albumNumber },
-                success: function (data) {
-                    $('.song-list-container').html(data);
-
-                    // Add to Playlist 버튼에 대한 클릭 이벤트 리스너 추가
-                    $('.add-to-playlist').click(function () {
-                        var songIdToAdd = $(this).data('song-id');
-
-                        // AJAX를 사용하여 노래를 플레이리스트에 추가
-                        $.ajax({
-                            url: 'add_to_playlist.php', // 실제 파일 이름에 맞게 수정
-                            type: 'POST',
-                            data: { add_to_playlist: songIdToAdd },
-                            success: function (response) {
-                                alert(response); // 서버에서 반환한 메시지를 알림으로 표시
-                            },
-                            error: function () {
-                                alert('Failed to add song to playlist.');
-                            }
-                        });
-                    });
-                },
-                error: function () {
-                    alert('Failed to load songs.');
-                }
-            });
-        });
-    });
-</script>
 
 <script>
     $(document).ready(function () {
@@ -267,16 +150,16 @@ if ($loggedIn) {
             <a href="signup.php">Sign Up</a>
         <?php endif; ?>
     </div>
-
+    <div class="middle">
     <div class="left">
         <?php
-        // Check if there are albums
+        // 앨범이 있는지 확인
         if ($result_album->num_rows > 0) {
             echo "<h2>Albums</h2>";
             echo "<table>";
             echo "<tr><th>Album Number</th><th>Album Title</th><th>Artist</th><th>Release Date</th><th>Action</th></tr>";
 
-            // Output data of each row
+            // 각 행의 데이터 출력
             while ($row_album = $result_album->fetch_assoc()) {
                 echo "<tr>";
                 echo "<td>" . $row_album["albumNumber"] . "</td>";
@@ -294,7 +177,7 @@ if ($loggedIn) {
         ?>
 
         <div class="song-list-container">
-            <!-- 노래 목록이 여기에 동적으로 로드됩니다. -->
+            <!-- 노래 목록이 여기에 동적으로 로드 -->
         </div>
     </div>
 
@@ -303,10 +186,11 @@ if ($loggedIn) {
         <div class="playlist-container">
             <h2>Your Playlist</h2>
             <div id="playlist-table-container">
-                <!-- 플레이리스트 테이블이 여기에 동적으로 로드됩니다. -->
+                <!-- 플레이리스트 테이블이 여기에 동적으로 로드 -->
             </div>
         </div>
     <?php endif; ?>
 </div>
+    </div>
 </body>
 </html>

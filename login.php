@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $loginUsername = $_POST["username"];
     $loginPassword = $_POST["password"];
 
-    $sql = "SELECT id, username, password FROM users WHERE username='$loginUsername'";
+    $sql = "SELECT id, username,nickname, password FROM users WHERE username='$loginUsername'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // 로그인 성공 시 세션에 사용자 정보 저장
             $_SESSION['user_id'] = $row['id'];
             $_SESSION['username'] = $row['username'];
-
+            $_SESSION['nickname'] = $row['nickname'];
             $message = "Login successful!";
             
             // 로그인 성공 시 index.php로 이동

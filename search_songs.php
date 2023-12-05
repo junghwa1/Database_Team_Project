@@ -12,10 +12,10 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get search term from AJAX request
+// AJAX 요청에서 검색어 가져오기
 $searchTerm = $_GET['searchTerm'];
 
-// Query to search for songs based on the provided search term
+// 검색어를 기반으로 노래를 찾기 위한 쿼리
 $sql_search = "SELECT s.songId, s.albumNumber, s.trackNumber, s.musicTitle, a.artist, s.songLength, s.heart
                FROM song s
                JOIN album a ON s.albumNumber = a.albumNumber
@@ -25,11 +25,11 @@ $sql_search = "SELECT s.songId, s.albumNumber, s.trackNumber, s.musicTitle, a.ar
                OR s.heart LIKE '%$searchTerm%'
                ORDER BY s.songId";
 
-// Get sort type from AJAX request
+// AJAX 요청에서 정렬 유형 가져오기
 
 $result_search = $conn->query($sql_search);
 
-// Check if there are matching songs
+// 일치하는 노래가 있는지 확인
 if ($result_search->num_rows > 0) {
     echo "<h2>Search Results</h2>";
 
@@ -43,7 +43,7 @@ if ($result_search->num_rows > 0) {
     echo "<table class='searched-results'>";
     echo "<tr><th>Song ID</th><th>Music Title</th><th>Artist</th><th>Song Length</th><th>Heart Count</th><th>Action</th></tr>";
 
-    // Output data of each row
+    // 각 행의 데이터 출력
     while ($row_search = $result_search->fetch_assoc()) {
         echo "<tr>";
         echo "<td>" . $row_search["songId"] . "</td>";
@@ -62,14 +62,13 @@ if ($result_search->num_rows > 0) {
     echo "<p>No matching songs found.</p>";
 }
 
-// Close the database connection
 $conn->close();
 ?>
 <html>
 <body>
 <script>
     $('.sort-button').click(function () {
-    var sortType = $(this).attr('sort-type'); // Change this line
+    var sortType = $(this).attr('sort-type');
     var searchTerm = '<?php echo $searchTerm; ?>';
     $.ajax({
         url: 'sort_searched_songs.php',
@@ -99,7 +98,7 @@ $conn->close();
         var tableHtml = "<table class='searched-results'>";
         tableHtml += "<tr><th>Song ID</th><th>Music Title</th><th>Artist</th><th>Song Length</th><th>Heart Count</th><th>Action</th></tr>";
 
-        // Output data of each row
+        // 각 행의 데이터 출력
         for (var i = 0; i < sortedData.length; i++) {
             tableHtml += "<tr>";
             tableHtml += "<td>" + sortedData[i]["songId"] + "</td>";

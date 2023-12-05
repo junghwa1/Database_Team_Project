@@ -1,5 +1,9 @@
+<html>
+    <head>
+    <link rel="stylesheet" href="styles.css">
+</head>
+    </html>
 <?php
-//load_playlist.php
 session_start();
 
 if (isset($_SESSION['username'])) {
@@ -19,7 +23,7 @@ if (isset($_SESSION['username'])) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // Query to get user's playlist
+    // 사용자의 플레이 리스트를 가져오는 쿼리
     $sql_playlist = "SELECT
                         up.id AS playlistItemId,
                         up.userId,
